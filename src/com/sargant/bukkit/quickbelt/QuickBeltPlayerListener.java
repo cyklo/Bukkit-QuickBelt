@@ -21,10 +21,13 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	
 	public void invCheck(Player player) {
 		
-		Boolean playerCheck = parent.status.get(player.getName());
+		if(!parent.force) {
 		
-		if(playerCheck == null || playerCheck == false) {
-			return;
+			Boolean playerCheck = parent.status.get(player.getName());
+		
+			if(playerCheck == null || playerCheck == false) {
+				return;
+			}
 		}
 		
 		ItemStack[] inventory = player.getInventory().getContents();
@@ -45,7 +48,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 				
 				inventory[i+9].setType(Material.AIR);
 				
-				if(i < 9 && inventory[i].getType() != Material.AIR) {
+				if(i < 9 && inventory[i].getType() != Material.AIR && !parent.silent) {
 					player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
 				}
 			}

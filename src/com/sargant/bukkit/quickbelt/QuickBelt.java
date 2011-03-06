@@ -22,11 +22,15 @@ public class QuickBelt extends JavaPlugin {
 	protected HashMap<String, Boolean> status;
 	protected final Logger log;
 	protected QuickBeltPlayerListener playerListener;
+	protected Boolean force;
+	protected Boolean silent;
 	
 	public QuickBelt() {
 		log = Logger.getLogger("Minecraft");
 		playerListener = new QuickBeltPlayerListener(this);
 		status = new HashMap<String, Boolean>();
+		force = false;
+		silent = false;
 	}
 
 	@Override
@@ -61,6 +65,20 @@ public class QuickBelt extends JavaPlugin {
 			return;
 		}
 		
+		if(keys.contains("force")) {
+			force = getConfiguration().getBoolean("force", false);
+		} else {
+			getConfiguration().setProperty("force", false);
+			getConfiguration().save();
+		}
+		
+		if(keys.contains("silent")) {
+			silent = getConfiguration().getBoolean("silent", false);
+		} else {
+			getConfiguration().setProperty("silent", false);
+			getConfiguration().save();
+		}
+		
 		List <String> users = getConfiguration().getStringList("quickbelt", null);
 		
 		if(users != null) {
@@ -82,6 +100,10 @@ public class QuickBelt extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		if(!(sender instanceof Player)) {
+			return false;
+		}
+		
+		if(force) {
 			return false;
 		}
 		
