@@ -2,7 +2,7 @@
 <project basedir="." default="build" name="quickbelt">
 	
 	<property name="bukkit-location" value="bukkit.jar"/>
-	<property name="output-jar" value="quickbelt.jar"/>
+	<property name="output-jar" value="${ant.project.name}.jar"/>
 	
     <property name="debuglevel" value="source,lines"/>
 	
