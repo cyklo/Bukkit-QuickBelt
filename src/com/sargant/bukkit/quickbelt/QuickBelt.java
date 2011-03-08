@@ -143,7 +143,7 @@ public class QuickBelt extends JavaPlugin {
 		} else if(args[0].equalsIgnoreCase("on")) {
 			
 			status.put(player.getName(), true);
-			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", false);
+			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", true);
 			getConfiguration().save();
 			
 			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt enabled" + ChatColor.AQUA.toString());
