@@ -95,6 +95,9 @@ public class QuickBelt extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_ANIMATION, playerListener, Priority.Highest, this);
 		pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, playerListener, Priority.Highest, this);
 		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Highest, this);
+		
+		pm.registerEvent(Event.Type.PLAYER_KICK, playerListener, Priority.Lowest, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Lowest, this);
 
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}

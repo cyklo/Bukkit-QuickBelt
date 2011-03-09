@@ -17,12 +17,23 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	{
 		parent = instance;
 	}
+	
+	@Override
+	public void onPlayerQuit(PlayerEvent event) { cleanup(event); }
+	
+	@Override
+	public void onPlayerKick(PlayerKickEvent event) { cleanup(event); }
 
+	@Override
 	public void onPlayerMove(PlayerMoveEvent event) { invCheck(event); }
+	
+	@Override
 	public void onPlayerAnimation(PlayerAnimationEvent event) { invCheck(event); }
+	
+	@Override
 	public void onPlayerDropItem(PlayerDropItemEvent event) { invCheck(event); }
 	
-	public void invCheck(PlayerEvent pev) {
+	private void invCheck(PlayerEvent pev) {
 		
 		Player player = pev.getPlayer();
 		
@@ -85,6 +96,10 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		player.getInventory().setContents((ItemStack[]) inv.toArray());
 	}
 	
+	private void cleanup(PlayerEvent event) {
+		parent.inventories.remove(event.getPlayer().getName());
+		parent.status.remove(event.getPlayer().getName());
+	}
 	
 	
 	private Boolean dropColumns(List<ItemStack> inv) {
