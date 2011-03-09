@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +21,7 @@ import com.sargant.bukkit.common.Common;
 public class QuickBelt extends JavaPlugin {
 	
 	protected HashMap<String, Boolean> status;
+	protected HashMap<String, List<ItemStack>> inventories;
 	protected final Logger log;
 	protected QuickBeltPlayerListener playerListener;
 	protected Boolean force;
@@ -29,6 +31,7 @@ public class QuickBelt extends JavaPlugin {
 		log = Logger.getLogger("Minecraft");
 		playerListener = new QuickBeltPlayerListener(this);
 		status = new HashMap<String, Boolean>();
+		inventories = new HashMap<String, List<ItemStack>>();
 		force = false;
 		silent = false;
 	}
