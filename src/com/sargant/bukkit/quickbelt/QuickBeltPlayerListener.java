@@ -18,11 +18,13 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		parent = instance;
 	}
 
-	public void onPlayerMove(PlayerMoveEvent event) { invCheck(event.getPlayer()); }
-	public void onPlayerAnimation(PlayerAnimationEvent event) { invCheck(event.getPlayer()); }
-	public void onPlayerDropItem(PlayerDropItemEvent event) { invCheck(event.getPlayer()); }
+	public void onPlayerMove(PlayerMoveEvent event) { invCheck(event); }
+	public void onPlayerAnimation(PlayerAnimationEvent event) { invCheck(event); }
+	public void onPlayerDropItem(PlayerDropItemEvent event) { invCheck(event); }
 	
-	public void invCheck(Player player) {
+	public void invCheck(PlayerEvent pev) {
+		
+		Player player = pev.getPlayer();
 		
 		if(!parent.force) {
 		
@@ -75,7 +77,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		}
 		
 		// Now we catch up on ourselves and keep dropping to the bottom
-		while(didDrop == false) {
+		while(didDrop == true) {
 			didDrop = dropColumns(inv);
 		}
 		

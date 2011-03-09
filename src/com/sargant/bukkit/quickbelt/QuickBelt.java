@@ -82,7 +82,7 @@ public class QuickBelt extends JavaPlugin {
 			getConfiguration().save();
 		}
 		
-		List <String> users = getConfiguration().getStringList("quickbelt", null);
+		List <String> users = getConfiguration().getKeys("quickbelt");
 		
 		if(users != null) {
 			for(String u : users) {
