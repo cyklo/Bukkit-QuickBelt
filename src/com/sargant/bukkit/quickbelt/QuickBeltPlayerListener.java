@@ -39,9 +39,9 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		if(!parent.force) {
 		
-			Boolean playerCheck = parent.status.get(player.getName());
+			String playerCheck = parent.status.get(player.getName());
 		
-			if(playerCheck == null || playerCheck == false) {
+			if(playerCheck == null || playerCheck.equalsIgnoreCase("false")) {
 				return;
 			}
 		}

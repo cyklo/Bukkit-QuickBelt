@@ -20,7 +20,7 @@ import com.sargant.bukkit.common.Common;
 
 public class QuickBelt extends JavaPlugin {
 	
-	protected HashMap<String, Boolean> status;
+	protected HashMap<String, String> status;
 	protected HashMap<String, List<ItemStack>> inventories;
 	protected final Logger log;
 	protected QuickBeltPlayerListener playerListener;
@@ -30,7 +30,7 @@ public class QuickBelt extends JavaPlugin {
 	public QuickBelt() {
 		log = Logger.getLogger("Minecraft");
 		playerListener = new QuickBeltPlayerListener(this);
-		status = new HashMap<String, Boolean>();
+		status = new HashMap<String, String>();
 		inventories = new HashMap<String, List<ItemStack>>();
 		force = false;
 		silent = false;
@@ -86,7 +86,13 @@ public class QuickBelt extends JavaPlugin {
 		
 		if(users != null) {
 			for(String u : users) {
-				status.put(u, getConfiguration().getBoolean("quickbelt."+u+".enabled", false));
+				String s = getConfiguration().getString("quickbelt."+u+".enabled", "false");
+				
+				if(s.equalsIgnoreCase("true")) {
+					status.put(u, "true");
+				} else {
+					status.put(u, "false");
+				}
 			}
 		}
 		
@@ -120,9 +126,9 @@ public class QuickBelt extends JavaPlugin {
 			
 			retstr += "Your QuickBelt is currently";
 			
-			Boolean playerStatus = (Boolean) status.get(player.getName()); 
+			String playerStatus = status.get(player.getName()); 
 			
-			if(playerStatus == null || playerStatus == false) {
+			if(playerStatus == null || playerStatus.equalsIgnoreCase("false")) {
 				retstr += ChatColor.RED.toString() + " disabled\n";
 				retstr += ChatColor.YELLOW.toString() + "Type '/qb on' to enable";
 			} else {
@@ -138,9 +144,9 @@ public class QuickBelt extends JavaPlugin {
 		
 		if(args[0].equalsIgnoreCase("off")) {
 			
-			status.put(player.getName(), false);
+			status.put(player.getName(), "false");
 			
-			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", false);
+			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", "false");
 			getConfiguration().save();
 			
 			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt disabled" + ChatColor.AQUA.toString());
@@ -148,8 +154,8 @@ public class QuickBelt extends JavaPlugin {
 			
 		} else if(args[0].equalsIgnoreCase("on")) {
 			
-			status.put(player.getName(), true);
-			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", true);
+			status.put(player.getName(), "true");
+			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", "true");
 			getConfiguration().save();
 			
 			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt enabled" + ChatColor.AQUA.toString());
