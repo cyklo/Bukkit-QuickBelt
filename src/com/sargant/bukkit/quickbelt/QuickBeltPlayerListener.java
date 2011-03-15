@@ -87,7 +87,10 @@ public class QuickBeltPlayerListener extends PlayerListener {
 				ItemStack swap = inv.get(i+27);
 				inv.set(i+27, inv.get(i));
 				inv.set(i, swap);
-				player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
+				
+				if(!parent.silent) {
+					player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
+				}
 			}
 		}
 		
