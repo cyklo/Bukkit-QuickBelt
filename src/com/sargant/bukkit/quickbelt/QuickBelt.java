@@ -21,6 +21,7 @@ import com.sargant.bukkit.common.Common;
 public class QuickBelt extends JavaPlugin {
 	
 	protected HashMap<String, String> status;
+	protected HashMap<String, String> useSlots;
 	protected HashMap<String, List<ItemStack>> inventories;
 	protected final Logger log;
 	protected QuickBeltPlayerListener playerListener;
@@ -31,6 +32,7 @@ public class QuickBelt extends JavaPlugin {
 		log = Logger.getLogger("Minecraft");
 		playerListener = new QuickBeltPlayerListener(this);
 		status = new HashMap<String, String>();
+		useSlots = new HashMap<String, String>();
 		inventories = new HashMap<String, List<ItemStack>>();
 		force = false;
 		silent = false;
@@ -86,13 +88,11 @@ public class QuickBelt extends JavaPlugin {
 		
 		if(users != null) {
 			for(String u : users) {
-				String s = getConfiguration().getString("quickbelt."+u+".enabled", "false");
+				String st = getConfiguration().getString("quickbelt."+u+".enabled", "false");
+				status.put(u, st);
 				
-				if(s.equalsIgnoreCase("true")) {
-					status.put(u, "true");
-				} else {
-					status.put(u, "false");
-				}
+				String sl = getConfiguration().getString("quickbelt."+u+".slots", "all");
+				useSlots.put(u, sl);
 			}
 		}
 		
@@ -145,24 +145,72 @@ public class QuickBelt extends JavaPlugin {
 		if(args[0].equalsIgnoreCase("off")) {
 			
 			status.put(player.getName(), "false");
+			updateConfig(player.getName(), "enabled", "false");
 			
-			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", "false");
-			getConfiguration().save();
-			
-			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt disabled" + ChatColor.AQUA.toString());
+			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt disabled");
 			return true;
 			
 		} else if(args[0].equalsIgnoreCase("on")) {
 			
 			status.put(player.getName(), "true");
-			getConfiguration().setProperty("quickbelt." + player.getName() + ".enabled", "true");
-			getConfiguration().save();
+			updateConfig(player.getName(), "enabled", "true");
 			
-			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt enabled" + ChatColor.AQUA.toString());
+			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt enabled");
 			return true;
+			
+		} else if(args[0].equalsIgnoreCase("slots")) {
+			
+			if(args.length < 2) {
+				
+				String slotsString = useSlots.get(player.getName());
+				
+				if(useSlots.get(player.getName()).equals("all")) {
+					player.sendMessage(ChatColor.AQUA.toString() + "All slots enabled");
+				} else if(slotsString.matches("^[0-9]+$")) {
+					player.sendMessage(slotsStatus(slotsString));
+				} else {
+					player.sendMessage(ChatColor.RED + "Your slots record is unreadable.");
+				}
+				
+				return true;
+			}
+			
+			else if(args[1].equalsIgnoreCase("all")) {
+				
+				useSlots.put(player.getName(), "all");
+				updateConfig(player.getName(), "slots", "all");
+				
+				player.sendMessage(ChatColor.AQUA.toString() + "All slots enabled");
+				return true;
+				
+			} else if(args[1].matches("^[0-9]+$")) {
+				
+				useSlots.put(player.getName(), args[1]);
+				updateConfig(player.getName(), "slots", args[1]);
+
+				player.sendMessage(slotsStatus(args[1]));
+				return true;
+			}
+			
 		}
 			
 		player.sendMessage(ChatColor.AQUA.toString() + "Unrecognized command");
 		return false;
+	}
+	
+	private void updateConfig(String player, String component, String value) {
+		getConfiguration().setProperty("quickbelt." + player + "." + component, value);
+		getConfiguration().save();
+	}
+	
+	private String slotsStatus(String slots) {
+		String retval = ChatColor.AQUA.toString() + "Slot status:";
+		
+		for(int i = 1; i <= 9; i++) {
+			retval += (slots.contains(String.valueOf(i))) ? ChatColor.GREEN.toString() : ChatColor.RED.toString();
+			retval += " " + i;
+		}
+		
+		return retval;
 	}
 }

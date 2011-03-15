@@ -73,11 +73,15 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		// Doing it the second way to guarantee a vacant slot gets filled form whatever height
 		
 		// Firstly, let's shuffle everything to the bottom
-		dropColumns(inv);
+		String slotsString = parent.useSlots.get(player.getName());
+		dropColumns(inv, slotsString);
 		
 		Boolean didDrop = false;
 		// Secondly, we'll move things into their empty slots if vacant
 		for(Integer i = 0; i <= 8; i++) {
+			
+			if(!slotsString.equals("all") && !slotsString.contains(String.valueOf(i+1))) continue;
+			
 			if(inv.get(i).getType() == Material.AIR && inv.get(i+27).getType() != Material.AIR) {
 				didDrop = true;
 				ItemStack swap = inv.get(i+27);
@@ -89,7 +93,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		// Now we catch up on ourselves and keep dropping to the bottom
 		while(didDrop == true) {
-			didDrop = dropColumns(inv);
+			didDrop = dropColumns(inv,  parent.useSlots.get(player.getName()));
 		}
 		
 		parent.inventories.put(player.getName(), inv);
@@ -102,11 +106,17 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	}
 	
 	
-	private Boolean dropColumns(List<ItemStack> inv) {
+	private Boolean dropColumns(List<ItemStack> inv, String whatSlots) {
 		
 		Boolean didDrop = false;
 		
 		for(Integer i = 9; i <= 26; i++) {
+			
+			if(!whatSlots.equals("all")) {
+				Integer colNumber = 1 + (i % 9);
+				if(!whatSlots.contains(String.valueOf(colNumber))) continue;
+			}
+			
 			if(inv.get(i).getType() != Material.AIR && inv.get(i+9).getType() == Material.AIR) {
 				didDrop = true;
 				ItemStack swap = inv.get(i+9);
