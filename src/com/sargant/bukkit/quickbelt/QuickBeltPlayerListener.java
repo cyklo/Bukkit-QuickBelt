@@ -13,8 +13,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	
 	private QuickBelt parent;
 
-	public QuickBeltPlayerListener(QuickBelt instance)
-	{
+	public QuickBeltPlayerListener(QuickBelt instance) {
 		parent = instance;
 	}
 	
@@ -35,35 +34,29 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	
 	private void invCheck(PlayerEvent pev) {
 		
+		// Check the player wants to use quickbelt
 		Player player = pev.getPlayer();
-		
-		if(!parent.force) {
-		
-			String playerCheck = parent.status.get(player.getName());
-		
-			if(playerCheck == null || playerCheck.equalsIgnoreCase("false")) {
-				return;
-			}
-		}
+		if(!parent.isPlayerEnabled(player)) return;
 		
 		// We use Lists for hash-checking
-		List<ItemStack> inv = Arrays.asList(player.getInventory().getContents());
+		List<ItemStack> current_inv = Arrays.asList(player.getInventory().getContents());
+		List<ItemStack> previous_inv = parent.inventories.get(player.getName());
 		
 		// If user doesn't exist, insert them to the inventories
 		// We may still want to update, so don't cancel
-		if(null == parent.inventories.get(player.getName())) {
-			parent.inventories.put(player.getName(), inv);
+		if(previous_inv == null) {
+			parent.inventories.put(player.getName(), current_inv);
 			
 		// If the user existed and hasn't changed, give up
-		} else if(parent.inventories.get(player.getName()).equals(inv)) {
+		} else if(previous_inv.equals(current_inv)) {
 			return;
 		
 		// Otherwise the user has changed, and we want to process
 		} else {
-			parent.inventories.put(player.getName(), inv);
+			parent.inventories.put(player.getName(), current_inv);
 		}
 		
-		if(inv.size() != 36) {
+		if(current_inv.size() != 36) {
 			parent.log.warning("Inventory is not 36 in size. I am broken. Sad face.");
 			return;
 		}
@@ -74,7 +67,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		// Firstly, let's shuffle everything to the bottom
 		String slotsString = parent.useSlots.get(player.getName());
-		dropColumns(inv, slotsString);
+		dropColumns(current_inv, slotsString);
 		
 		Boolean didDrop = false;
 		// Secondly, we'll move things into their empty slots if vacant
@@ -82,11 +75,11 @@ public class QuickBeltPlayerListener extends PlayerListener {
 			
 			if(!slotsString.equals("all") && !slotsString.contains(String.valueOf(i+1))) continue;
 			
-			if(inv.get(i).getType() == Material.AIR && inv.get(i+27).getType() != Material.AIR) {
+			if(current_inv.get(i).getType() == Material.AIR && current_inv.get(i+27).getType() != Material.AIR) {
 				didDrop = true;
-				ItemStack swap = inv.get(i+27);
-				inv.set(i+27, inv.get(i));
-				inv.set(i, swap);
+				ItemStack swap = current_inv.get(i+27);
+				current_inv.set(i+27, current_inv.get(i));
+				current_inv.set(i, swap);
 				
 				if(!parent.silent) {
 					player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
@@ -96,11 +89,11 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		// Now we catch up on ourselves and keep dropping to the bottom
 		while(didDrop == true) {
-			didDrop = dropColumns(inv,  parent.useSlots.get(player.getName()));
+			didDrop = dropColumns(current_inv,  parent.useSlots.get(player.getName()));
 		}
 		
-		parent.inventories.put(player.getName(), inv);
-		player.getInventory().setContents((ItemStack[]) inv.toArray());
+		parent.inventories.put(player.getName(), current_inv);
+		player.getInventory().setContents((ItemStack[]) current_inv.toArray());
 	}
 	
 	private void cleanup(PlayerEvent event) {
@@ -114,7 +107,6 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		Boolean didDrop = false;
 		
 		for(Integer i = 9; i <= 26; i++) {
-			
 			if(!whatSlots.equals("all")) {
 				Integer colNumber = 1 + (i % 9);
 				if(!whatSlots.contains(String.valueOf(colNumber))) continue;
@@ -127,8 +119,6 @@ public class QuickBeltPlayerListener extends PlayerListener {
 				inv.set(i, swap);
 			}
 		}
-		
 		return didDrop;
 	}
-	
 }
