@@ -132,7 +132,7 @@ public class QuickBelt extends JavaPlugin {
 				retstr += ChatColor.RED.toString() + " disabled\n";
 				retstr += ChatColor.YELLOW.toString() + "Type '/qb drop' to enable";
 			} else {
-				retstr += ChatColor.GREEN.toString() + " drop mode\n";
+				retstr += "set to " + ChatColor.GREEN.toString() + " drop mode\n";
 				retstr += ChatColor.YELLOW.toString() + "Type '/qb off' to disable";
 			}
 			
