@@ -64,34 +64,8 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		// Given the split in the numbers, there are two easy ways of doing this, 
 		// either slots first, columns second, or columns first, slots second
 		// Doing it the second way to guarantee a vacant slot gets filled form whatever height
-		
-		// Firstly, let's shuffle everything to the bottom
-		String slotsString = parent.useSlots.get(player.getName());
-		dropColumns(current_inv, slotsString);
-		
-		Boolean didDrop = false;
-		// Secondly, we'll move things into their empty slots if vacant
-		for(Integer i = 0; i <= 8; i++) {
-			
-			if(!slotsString.equals("all") && !slotsString.contains(String.valueOf(i+1))) continue;
-			
-			if(current_inv.get(i).getType() == Material.AIR && current_inv.get(i+27).getType() != Material.AIR) {
-				didDrop = true;
-				ItemStack swap = current_inv.get(i+27);
-				current_inv.set(i+27, current_inv.get(i));
-				current_inv.set(i, swap);
-				
-				if(!parent.silent) {
-					player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
-				}
-			}
-		}
-		
-		// Now we catch up on ourselves and keep dropping to the bottom
-		while(didDrop == true) {
-			didDrop = dropColumns(current_inv,  parent.useSlots.get(player.getName()));
-		}
-		
+		algorithmDrop(player, previous_inv, current_inv);
+
 		parent.inventories.put(player.getName(), current_inv);
 		player.getInventory().setContents((ItemStack[]) current_inv.toArray());
 	}
@@ -119,5 +93,34 @@ public class QuickBeltPlayerListener extends PlayerListener {
 			}
 		}
 		return didDrop;
+	}
+	
+	private void algorithmDrop(Player player, List<ItemStack> previous_inv, List<ItemStack> current_inv) {
+		
+		String slotsString = parent.useSlots.get(player.getName());
+		dropColumns(current_inv, slotsString);
+		
+		Boolean didDrop = false;
+		// Secondly, we'll move things into their empty slots if vacant
+		for(Integer i = 0; i <= 8; i++) {
+			
+			if(!slotsString.equals("all") && !slotsString.contains(String.valueOf(i+1))) continue;
+			
+			if(current_inv.get(i).getType() == Material.AIR && current_inv.get(i+27).getType() != Material.AIR) {
+				didDrop = true;
+				ItemStack swap = current_inv.get(i+27);
+				current_inv.set(i+27, current_inv.get(i));
+				current_inv.set(i, swap);
+				
+				if(!parent.silent) {
+					player.sendMessage(ChatColor.AQUA.toString() + "Replenished slot " + (i+1) + ChatColor.WHITE.toString());
+				}
+			}
+		}
+		
+		// Now we catch up on ourselves and keep dropping to the bottom
+		while(didDrop == true) {
+			didDrop = dropColumns(current_inv,  parent.useSlots.get(player.getName()));
+		}
 	}
 }
