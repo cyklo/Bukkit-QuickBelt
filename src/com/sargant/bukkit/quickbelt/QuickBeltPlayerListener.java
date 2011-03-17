@@ -97,8 +97,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	}
 	
 	private void cleanup(PlayerEvent event) {
-		parent.inventories.remove(event.getPlayer().getName());
-		parent.status.remove(event.getPlayer().getName());
+		// No need to clean up just a few bytes...
 	}
 	
 	
