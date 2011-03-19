@@ -62,6 +62,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		// We may still want to update, so don't cancel
 		if(previous_inv == null) {
 			parent.inventories.put(player.getName(), current_inv);
+			return;
 			
 		// If the user existed and hasn't changed, give up
 		} else if(previous_inv.equals(current_inv)) {

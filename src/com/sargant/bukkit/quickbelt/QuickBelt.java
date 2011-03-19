@@ -146,9 +146,9 @@ public class QuickBelt extends JavaPlugin {
 			
 			if(playerStatus == null || playerStatus.equalsIgnoreCase("false")) {
 				retstr += ChatColor.RED.toString() + " disabled\n";
-				retstr += ChatColor.YELLOW.toString() + "Type '/qb drop' to enable";
+				retstr += ChatColor.YELLOW.toString() + "Type '/qb on' to enable";
 			} else {
-				retstr += "set to " + ChatColor.GREEN.toString() + " drop mode\n";
+				retstr += ChatColor.GREEN.toString() + " enabled\n";
 				retstr += ChatColor.YELLOW.toString() + "Type '/qb off' to disable";
 			}
 			
@@ -166,12 +166,12 @@ public class QuickBelt extends JavaPlugin {
 			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt disabled");
 			return true;
 			
-		} else if(args[0].equalsIgnoreCase("drop")) {
+		} else if(args[0].equalsIgnoreCase("on")) {
 			
 			status.put(player.getName(), "drop");
 			updateConfig(player.getName(), "enabled", "drop");
 			
-			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt set to drop mode");
+			player.sendMessage(ChatColor.AQUA.toString() + "QuickBelt enabled");
 			return true;
 			
 		} else if(args[0].equalsIgnoreCase("slots")) {
