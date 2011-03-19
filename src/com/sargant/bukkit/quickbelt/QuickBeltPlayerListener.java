@@ -96,6 +96,8 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		Boolean didDrop = false;
 		
+		if(whatSlots == null) whatSlots = "all";
+		
 		for(Integer i = 9; i <= 26; i++) {
 			if(!whatSlots.equals("all")) {
 				Integer colNumber = 1 + (i % 9);
@@ -116,6 +118,8 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		
 		String slotsString = parent.useSlots.get(player.getName());
 		dropColumns(current_inv, slotsString);
+		
+		if(slotsString == null) slotsString = "all";
 		
 		Boolean didDrop = false;
 		// Secondly, we'll move things into their empty slots if vacant
