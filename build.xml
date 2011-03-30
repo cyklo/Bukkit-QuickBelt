@@ -35,9 +35,7 @@
 
     <target name="dist" depends="clean,build,jar">
         <fail unless="version" message="You need to specify a version number"/>
-        <property name="tarfile" value="${ant.project.name}_${version}.tar"/>
-        <tar destfile="${tarfile}" basedir="." includes="${output-jar} ${ant.project.name}/*" />
-        <gzip destfile="${tarfile}.gz" src="${tarfile}" />
-        <delete file="${tarfile}"/>
+        <property name="tarfile" value="${ant.project.name}_${version}.tar.gz"/>
+        <tar destfile="${tarfile}" basedir="." includes="${output-jar} ${ant.project.name}/*" compression="gzip" />
     </target>
 </project>

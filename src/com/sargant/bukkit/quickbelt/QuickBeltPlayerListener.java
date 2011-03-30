@@ -34,7 +34,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 	}
 	
 	@Override
-	public void onPlayerQuit(PlayerEvent event) { cleanup(event); }
+	public void onPlayerQuit(PlayerQuitEvent event) { cleanup(event); }
 	
 	@Override
 	public void onPlayerKick(PlayerKickEvent event) { cleanup(event); }
