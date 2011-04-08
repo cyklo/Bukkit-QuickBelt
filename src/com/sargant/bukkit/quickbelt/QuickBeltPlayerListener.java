@@ -104,12 +104,13 @@ public class QuickBeltPlayerListener extends PlayerListener {
 				if(!whatSlots.contains(String.valueOf(colNumber))) continue;
 			}
 			
-			if(inv.get(i).getType() != Material.AIR && inv.get(i+9).getType() == Material.AIR) {
-				didDrop = true;
-				ItemStack swap = inv.get(i+9);
-				inv.set(i+9, inv.get(i));
-				inv.set(i, swap);
+			if(!isAir(inv.get(i)) && isAir(inv.get(i+9))) { 
+			    didDrop = true;
+			    ItemStack swap = inv.get(i+9);
+	            inv.set(i+9, inv.get(i));
+	            inv.set(i, swap);
 			}
+			
 		}
 		return didDrop;
 	}
@@ -127,7 +128,7 @@ public class QuickBeltPlayerListener extends PlayerListener {
 			
 			if(!slotsString.equals("all") && !slotsString.contains(String.valueOf(i+1))) continue;
 			
-			if(current_inv.get(i).getType() == Material.AIR && current_inv.get(i+27).getType() != Material.AIR) {
+			if(isAir(current_inv.get(i)) && !isAir(current_inv.get(i+27))) {
 				didDrop = true;
 				ItemStack swap = current_inv.get(i+27);
 				current_inv.set(i+27, current_inv.get(i));
@@ -143,5 +144,11 @@ public class QuickBeltPlayerListener extends PlayerListener {
 		while(didDrop == true) {
 			didDrop = dropColumns(current_inv,  parent.useSlots.get(player.getName()));
 		}
+	}
+	
+	private boolean isAir(ItemStack m) {
+	    if(m == null) return true;
+	    if(m.getType() == Material.AIR) return true;
+	    return false;
 	}
 }
